@@ -37,3 +37,6 @@ def list_messages():
     cur.close()
     conn.close()
     return "<br>".join([r[0] for r in rows])
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
