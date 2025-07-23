@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: flask-app
+spec:
+  serviceName: "flask-app"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask
+        image: yourdockerhub/flask-pg-stateful
+        ports:
+        - containerPort: 5000
+        env:
+        - name: POSTGRES_HOST
+          value: postgresql.default.svc.cluster.local
+        - name: POSTGRES_DB
+          value: deepakdb
+        - name: POSTGRES_USER
+          value: deepak
+        - name: POSTGRES_PASSWORD
+          value: Qwerty@1
+        volumeMounts:
+        - name: flask-data
+          mountPath: /app/data
+  volumeClaimTemplates:
+  - metadata:
+      name: flask-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
